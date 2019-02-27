@@ -9,10 +9,12 @@ class ScapyDisplayStats:
     screen = []
 
     def __init__(self, stats):
-        self.field_list = stats.get_stats()
-        print self.field_list
         self.get_screen_info()
-        self.build_screen()
+        self.build_screen(stats)
+        self.disp_screen()
+
+    def update_screen(self, stats):
+        self.build_screen(stats)
         self.disp_screen()
 
     # Gets the terminal size to fit the window correctly
@@ -21,14 +23,15 @@ class ScapyDisplayStats:
         self.columns = int(self.columns)
         self.rows = int(self.rows)
 
+    # Draws a simple line across the screen
     def draw_line(self):
         line = ''
         for i in range(self.columns):
             line += '*'
-        print line
         return line
 
-    def build_screen(self):
+    # Overwrites the screen with the new display cache
+    def build_screen(self, stats):
         self.screen = []
 
         # Build header
@@ -37,6 +40,10 @@ class ScapyDisplayStats:
         self.screen.append(self.draw_line())
 
         # Add fields being tracked
+        for stat in stats:
+            new_line = stats[stat].disp_name + ": " + str(stats[stat].value)
+            self.screen.append(new_line)
+        self.screen.append(self.draw_line())
 
         # Add alerts and other stats
 
